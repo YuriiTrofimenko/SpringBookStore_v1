@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="org.tyaa.springbookstore.entity.Book" table="book" schema="" catalog="SpringBookStore">
+        <id name="id" column="id"/>
+        <property name="name" column="name"/>
+        <property name="quantity" column="quantity"/>
+        <property name="price" column="price"/>
+        <property name="content" column="content"/>
+        <property name="pageCount" column="page_count"/>
+        <property name="isbn" column="isbn"/>
+        <property name="publishYear" column="publish_year"/>
+        <property name="image" column="image"/>
+        <property name="descr" column="descr"/>
+        <many-to-one class="org.tyaa.springbookstore.entity.Author" fetch="join" name="author" lazy="false">
+            <column name="author_id" not-null="true"/>
+        </many-to-one>
+        <many-to-one class="org.tyaa.springbookstore.entity.Genre" fetch="join" name="genre" lazy="false">
+            <column name="genre_id" not-null="true"/>
+        </many-to-one>
+        <many-to-one class="org.tyaa.springbookstore.entity.Publisher" fetch="join" name="publisher" lazy="false">
+            <column name="publisher_id" not-null="true"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

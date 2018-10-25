@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition>
+            <div id="wrap">
+                <ui:include src="/WEB-INF/chunks/partsIndex/logoIndex.xhtml"/>
+                <ui:include src="/WEB-INF/chunks/partsIndex/searchIndex.xhtml"/>
+                <ui:include src="/WEB-INF/chunks/partsIndex/lettersIndex.xhtml"/>
+                <div class="content">
+                    <ui:include src="/WEB-INF/chunks/partsIndex/genresIndex.xhtml"/>
+                    <div class="right-content">
+                        <div class="box-sh">
+                            <h1><p:outputLabel id="booksCount" value="#{msg.book_count}:  #{commonFacade.books.size()}" /></h1>
+                            <h:form id="add-action">
+                                <p:commandLink rendered="#{sec:areAllGranted('ROLE_ADMIN')}">
+                                    <h:outputText value="#{msg.add_book}" title="#{msg.add_book}" />
+                                </p:commandLink>
+                            </h:form>
+                        </div>
+                        <h:form id="booksForm" >
+                            <p:dataGrid
+                                rowIndexVar="rowIndex"
+                                columns="2"
+                                lazy="true"
+                                var="b"
+                                value="${commonFacade.books}"
+                                id="booksList"
+                                styleClass="books_list"
+                                paginator="true"
+                                rows="4"
+                                paginatorPosition="bottom"
+                                rowsPerPageTemplate="4,10,20"
+                                paginatorTemplate="{RowsPerPageDropdown} {PageLinks}"
+                                paginatorAlwaysVisible="true"
+                                emptyMessage=""
+                            >
+                                <div class="item">
+                                    <div class="image-info">
+                                        <h:outputLink styleClass="content_link" target="_blank">
+                                            <p:graphicImage value="/image?idx=#{rowIndex}" width="110" height="150"/>
+                                        </h:outputLink>
+                                    </div>
+                                    <div class="info">
+                                        <div class="book_name">
+                                            <h:outputLink
+                                                id="bookName"
+                                                styleClass="title"
+                                                target="_blank"
+                                            >
+                                                <h:outputText value="#{b.name.length() gt 30 ? b.name.substring(0,30).concat('...') : b.name}" />
+                                            </h:outputLink>
+                                        </div>
+                                        <span>#{b.author}</span>
+                                        <p><strong>#{msg.page_count}:</strong> #{b.pageCount}</p>
+                                        <p><strong>#{msg.publisher}</strong> #{b.publisher}</p>
+                                        <p><strong>#{msg.publish_year}</strong> #{b.publishYear} г.</p>
+                                        <p><strong>#{msg.isbn}</strong> #{b.isbn}</p>
+                                    </div>
+                                    <h:outputLink styleClass="mr" value="#{request.contextPath}/pdf" target="_blank">
+                                        <p class="read">#{msg.read}</p>
+                                        <f:param name="book_id" value="#{b.id}"/>
+                                        <f:param name="download" value="false"/>
+                                    </h:outputLink>
+                                    <h:outputLink styleClass="mr" value="#{request.contextPath}/pdf" target="_blank">
+                                        <p class="download">#{msg.download}</p>
+                                        <f:param name="book_id" value="#{b.id}"/>
+                                        <f:param name="filename" value="#{b.name}"/>
+                                        <f:param name="download" value="true"/>
+                                    </h:outputLink>
+                                </div>
+                            </p:dataGrid>
+                        </h:form>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="footer_blank"></div>
+            </div>
+        </ui:composition>
+    </h:body>
+</html>
+

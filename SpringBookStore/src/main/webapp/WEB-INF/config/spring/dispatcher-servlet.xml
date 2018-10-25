@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+       <import resource="webflow.xml"/>
+       <import resource="controllers.xml"/>
+
+       <context:component-scan base-package="org.tyaa.springbookstore"/>
+       <!--<bean id="GenreDAOImpl" class="org.tyaa.springbookstoredao.impl.GenreDAOImpl"></bean>-->
+       <!--<bean id="LettersGenerator" class="org.tyaa.springbookstoreutils.LettersGenerator"></bean>-->
+
+       <mvc:resources location="/" mapping="/resources/**"/>
+
+
+       <bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
+              <property name="flowRegistry" ref="flowRegistry"/>
+              <property name="order" value="2"/>
+       </bean>
+
+       <bean name="resourceHandlerJSF" class="org.springframework.faces.webflow.JsfResourceRequestHandler" />
+
+       <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+              <property name="order" value="1" />
+              <property name="mappings">
+                     <value>
+                            /javax.faces.resource/**=resourceHandlerJSF
+                     </value>
+              </property>
+       </bean>
+
+       <bean class="org.springframework.faces.webflow.JsfFlowHandlerAdapter">
+              <property name="flowExecutor" ref="flowExecutor"/>
+       </bean>
+
+       <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+              <property name="viewClass" value="org.springframework.faces.mvc.JsfView"/>
+              <property name="prefix" value="/WEB-INF/standaloneViews/"/>
+              <property name="suffix" value=".xhtml"/>
+       </bean>
+
+       <bean id="msg" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+              <property name="basename" value="/WEB-INF/locales/messages" />
+              <property name="defaultEncoding" value="UTF-8" />
+       </bean>
+
+       <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+              <property name="defaultLocale" value="en" />
+       </bean>
+
+       <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+              <property name="jndiName" value="jdbc/SpringBookStore"/>
+       </bean>
+
+       <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+              <property name="dataSource" ref="dataSource"/>
+              <property name="configLocation" value="classpath:hibernate.cfg.xml" />
+              <!--авто поиск классов сущностей-->
+              <!--<property name="packagesToScan" value="org.tyaa.springbookstoreentity" />-->
+              <!--яаное указание путей к классам сущностей-->
+              <!--<property name="annotatedClasses">
+                     <list>
+                            <value>org.tyaa.springbookstoreentity.Book</value>
+                            <value>org.tyaa.springbookstoreentity.Genre</value>
+                            <value>org.tyaa.springbookstoreentity.Author</value>
+                            <value>org.tyaa.springbookstoreentity.Publisher</value>
+                     </list>
+              </property>-->
+              <!--<property name="hibernateProperties">
+                     <props>
+                            <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                            <prop key="hibernate.show_sql">true</prop>
+                     </props>
+              </property>-->
+       </bean>
+
+       <tx:annotation-driven />
+       <bean id="transactionManager"
+             class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+              <property name="sessionFactory" ref="sessionFactory" />
+       </bean>
+       
+       <!--Готовый бин-интерцептор для переключения локалей-->
+       <mvc:interceptors>
+              <mvc:interceptor>
+                     <mvc:mapping path="/**"/>
+                     <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+                            <property name="paramName" value="lang"/>
+                     </bean>
+              </mvc:interceptor>
+       </mvc:interceptors>
+
+       <!--Настройка для внедрения компонетов Spring в обыкновенные сервлеты-->
+       <bean class="org.springframework.web.context.support.ServletContextAttributeExporter">
+              <property name="attributes">
+                     <map>
+                            <!--key - имя атрибута, по которому компонент будет доступен в сервлете,
+                            value-ref - имя компонента (нужно указывать в настройках аннотации:
+                            @Component("common_facade"))-->
+                            <entry key="commonFacade" value-ref="commonFacade"/>
+                     </map>
+              </property>
+       </bean>
+
+</beans>

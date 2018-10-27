@@ -11,14 +11,24 @@
     <h:body>
         <ui:composition>
             <div class="left-menu">
+                <!-- Форма фильтра книг по жанру -->
                 <h:form styleClass="genres" id="genresForm">
                     <ul>
                         <ui:repeat value="${genreDAOImpl.genres}" var="g">
                             <li>
-                                <p:commandLink value="${g.name}" action="searchByGenre" actionListener="#{searchCriteria.setGenre(g)}" ajax="false"/>
+<!--                                <p:commandLink value="${g.name}" action="searchByGenre" actionListener="#{searchCriteria.setGenre(g)}" ajax="false"/>-->
+                                <p:commandButton
+                                    value="#{g.name}"
+                                    action="searchByGenre"
+                                    actionListener="#{searchCriteria.setGenre(g)}"
+                                    styleClass="noborder-button"
+                                    update=":booksForm:booksList">
+                                </p:commandButton>
                             </li>
                         </ui:repeat>
                     </ul>
+                    <!-- Отправка токена безопасности -->
+                    <input type="hidden"  name="${_csrf.parameterName}"   value="${_csrf.token}"/>
                 </h:form>
             </div>
         </ui:composition>

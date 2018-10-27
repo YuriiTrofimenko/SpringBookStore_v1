@@ -74,7 +74,7 @@ public class BookDAOImpl implements BookDAO {
                 createBookCriteria()
                         .add(Restrictions.and(
                                 Restrictions.ilike("author.fio", author.getFio(), MatchMode.ANYWHERE),
-                                Restrictions.sqlRestriction("fio REGEXP ?", "[A-Za-z]{1,}", StringType.INSTANCE)))
+                                Restrictions.sqlRestriction("fio REGEXP ?", "[A-zА-я]{1,}", StringType.INSTANCE)))
         );
         return books;
     }

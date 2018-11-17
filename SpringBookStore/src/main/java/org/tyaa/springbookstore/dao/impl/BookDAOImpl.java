@@ -104,6 +104,7 @@ public class BookDAOImpl implements BookDAO {
     @Transactional
     @Override
     public List<Book> getBooks(Character letter) {
+        //WHERE b.name LIKE [A%]
         List<Book> books = createBookList(
                 createBookCriteria()
                         .add(Restrictions

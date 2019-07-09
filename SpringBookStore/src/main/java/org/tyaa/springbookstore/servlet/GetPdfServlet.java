@@ -31,7 +31,7 @@ public class GetPdfServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("image/jpeg");
+        response.setContentType("application/pdf");
         OutputStream out = response.getOutputStream();
         try {
             Long bookId = Long.valueOf(request.getParameter("book_id"));

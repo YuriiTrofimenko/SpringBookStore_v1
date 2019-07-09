@@ -13,10 +13,17 @@ public class LettersGenerator {
 
     @PostConstruct
     private void initLetters(){
-        for (int i = 0; i < 26; i++) {
+        /* for (int i = 0; i < 26; i++) {
             mLetters[i] = (char)('a' + i);
+        } */
+        char currentChar = 'a';
+        for (int i = 0; i < 26; i++) {
+            mLetters[i] = currentChar++;
         }
     }
 
-    public Character[] getLetters() {System.out.println(mLetters);return mLetters;}
+    public Character[] getLetters() {
+        //System.out.println(mLetters);
+        return mLetters;
+    }
 }

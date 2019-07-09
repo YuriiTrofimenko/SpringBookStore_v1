@@ -151,4 +151,9 @@ public class BookDAOImpl implements BookDAO {
         criteria.add(Restrictions.eq("id", _bookId));
         return criteria.uniqueResult();
     }
+    
+    public void createBook(Book book){
+    
+        sessionFactory.getCurrentSession().save(book);
+    }
 }
